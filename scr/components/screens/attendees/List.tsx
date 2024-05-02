@@ -12,18 +12,23 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useEvent} from '../../context/EventContext';
 import ProgressBar from '../../../../components/elements/progress/ProgressBar';
 import colors from '../../../../colors/colors';
-import { BASE_URL } from '../../../config';
+import {BASE_URL} from '../../../config';
+import {MMKV} from 'react-native-mmkv';
 
+const storage = new MMKV();
 const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
+  const [userId, setUserId] = useState(
+    storage.getString('current_user_login_details_id'),
+  );
   const [filteredData, setFilteredData] = useState([]);
   const {refreshList} = useEvent();
   const flatListRef = useRef(null);
   const [totalAttendees, setTotalAttendees] = useState(0);
   const [totalCheckedAttendees, setTotalCheckedAttendees] = useState(0);
   const {eventId} = useEvent();
-  console.log('eventId', eventId);
   const [hasData, setHasData] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  console.log('event id', eventId);
 
   // Callback function to handle switch toggle in ListItem
   const handleSwitchToggle = () => {
@@ -35,8 +40,8 @@ const List = ({searchQuery, onUpdateProgress, filterCriteria}) => {
     const fetchAllEventAttendeeDetails = async () => {
       setIsLoading(true);
       try {
-        const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&attendee_id=91&status_id=2`;
-        const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&attendee_id=91&status_id=2`;
+        const url = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
+        const url1 = `${BASE_URL}/ajax_get_event_attendee_details/?event_id=${eventId}&current_user_login_details_id=${userId}&status_id=2`;
         const response = await axios.get(url);
         const response1 = await axios.get(url1);
 

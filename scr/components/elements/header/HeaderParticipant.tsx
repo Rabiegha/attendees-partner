@@ -12,7 +12,7 @@ const HeaderParticipants = ({onLeftPress, Title, onRightPress}) => {
         />
       </TouchableOpacity>
       <Text style={styles.Title}>{Title}</Text>
-      <TouchableOpacity onPress={onRightPress} style={styles.backButton}>
+      <TouchableOpacity onPress={undefined} style={styles.backButton}>
         <Image
           source={require('../../../assets/images/icons/Filtre.png')}
           style={styles.buttonImageBlack}
@@ -24,7 +24,7 @@ const HeaderParticipants = ({onLeftPress, Title, onRightPress}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    top: 20,
+    top: 30,
     flexDirection: 'row',
     justifyContent: 'space-between', // Align items to start
     alignItems: 'center',
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   buttonImageBlack: {
-    tintColor: colors.darkGrey,
+    tintColor: 'transparent',
     width: 20,
     height: 20,
   },

@@ -14,12 +14,13 @@ import {useFocusEffect} from '@react-navigation/native';
 import colors from '../../colors/colors';
 import {MMKV} from 'react-native-mmkv';
 import globalStyle from '../assets/styles/globalStyle';
-import { BASE_URL } from '../config';
+import {BASE_URL} from '../config';
 const storage = new MMKV();
 
-
 const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
-  const [userId, setUserId] = useState(storage.getString('user_id'));
+  const [userId, setUserId] = useState(
+    storage.getString('current_user_login_details_id'),
+  );
   useFocusEffect(
     React.useCallback(() => {
       StatusBar.setBarStyle('dark-content'); // Set status bar style to light-content
@@ -37,7 +38,7 @@ const EventPasseesScreen = ({searchQuery, onEventSelect}) => {
     const getEventDetails = async () => {
       setIsLoading(true); // Commencer le chargement
       try {
-        const url = `${BASE_URL}/ajax_get_event_details/?user_id=${userId}&is_event_from=0`;
+        const url = `${BASE_URL}/ajax_get_event_details/?current_user_login_details_id=${userId}&is_event_from=0`;
         const response = await axios.get(url);
         if (
           response.data.status &&

@@ -178,7 +178,7 @@ function TabNavigator() {
           }}
         />
 
-        <Tab.Screen
+       {/*  <Tab.Screen
           name="Add"
           component={AddAttendeesScreen}
           options={{
@@ -204,7 +204,7 @@ function TabNavigator() {
               </View>
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Scann"
           component={QRCodeScannerScreen}
@@ -226,7 +226,7 @@ function TabNavigator() {
           })}
         />
 
-        <Tab.Screen
+       {/*  <Tab.Screen
           name="Profil"
           component={ProfilScreen}
           options={{
@@ -251,7 +251,7 @@ function TabNavigator() {
               </View>
             ),
           }}
-        />
+        /> */}
         <Tab.Screen
           name="Menu"
           component={MenuScreen}

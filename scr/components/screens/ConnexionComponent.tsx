@@ -34,6 +34,7 @@ const ConnexionComponent = ({
         placeholder="Nom d'utilisateur"
         value={userName}
         onChangeText={setUserName}
+        placeholderTextColor={colors.grey}
       />
       <View style={styles.passwordInputContainer}>
         <TextInput
@@ -42,6 +43,7 @@ const ConnexionComponent = ({
           secureTextEntry={!showPassword}
           value={password}
           onChangeText={setPassword}
+          placeholderTextColor={colors.grey}
         />
         {/* Utilisez une image comme bouton pour afficher ou masquer le mot de passe */}
         <TouchableOpacity

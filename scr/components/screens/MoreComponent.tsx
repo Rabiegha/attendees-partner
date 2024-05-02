@@ -15,6 +15,7 @@ const MoreComponent = ({
   See,
   handleButton,
   Share,
+  comment,
 }) => {
   console.log(firstName, lastName, email);
 
@@ -79,6 +80,11 @@ const MoreComponent = ({
       <LabelValueComponent
         label="Entreprise:"
         value={organization}
+        value2={undefined}
+      />
+      <LabelValueComponent
+        label="Commmentaire:"
+        value={comment}
         value2={undefined}
       />
       {attendeeStatus == 0 ? (

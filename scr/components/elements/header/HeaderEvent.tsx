@@ -27,7 +27,7 @@ const HeaderEvent = ({onLeftPress, onRightPress, opacity}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    top: 20,
+    top: 30,
     flexDirection: 'row',
     justifyContent: 'space-between', // Align items to start
     alignItems: 'center',

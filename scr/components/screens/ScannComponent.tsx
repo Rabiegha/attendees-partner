@@ -1,5 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import HeaderComponent from '../elements/header/HeaderComponent';
 import colors from '../../../colors/colors';
 import {useNavigation} from '@react-navigation/native';
@@ -7,25 +12,33 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import axios from 'axios';
 import {EventProvider, useEvent} from '../context/EventContext';
 import CustomMarker from '../elements/CustomMarker';
-import { BASE_URL } from '../../config';
+import {BASE_URL} from '../../config';
+import ModalComponent from '../modals/CommentModal';
+import {MMKV} from 'react-native-mmkv';
+
+const storage = new MMKV();
 
 const ScannerComponent = () => {
+  const [userId, setUserId] = useState(
+    storage.getString('current_user_login_details_id'),
+  );
   const navigation = useNavigation();
   const [alertVisible, setAlertVisible] = useState(false);
-  const {triggerListRefresh} = useEvent();
-  const {eventId} = useEvent();
-  console.log('eventId11', eventId);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [attendeeId, setAttendeeId] = useState(null);
+  const [comment, setComment] = useState('');
+  const {triggerListRefresh, eventId} = useEvent();
 
-  // Définir 'handleBackPress' correctement à l'intérieur du composant pour accéder à 'navigation'
   const handleBackPress = () => {
-    navigation.goBack(); // Utilisez `goBack` ou la navigation spécifique selon vos besoins
+    navigation.goBack();
   };
 
   const handleAlertClose = () => {
-    setAlertVisible(false); // Réactiver le scanner une fois l'alerte fermée
+    setModalVisible(false);
+    setAlertVisible(false);
     triggerListRefresh();
   };
-
   const onSuccess = e => {
     if (!alertVisible) {
       const data = e.data;
@@ -33,76 +46,85 @@ const ScannerComponent = () => {
         event_id: eventId,
         name: data,
       };
-
-      // URL de votre API pour enregistrer les participants
-      const apiUrl = `${BASE_URL}/ajax_join_attendee/?event_id=${payload.event_id}&content=${data}`;
+      const apiUrl = `${BASE_URL}/ajax_join_attendee/?current_user_login_details_id=${userId}&event_id=${payload.event_id}&content=${data}`;
 
       axios
         .post(apiUrl, payload)
         .then(response => {
-          // Succès de l'enregistrement, afficher une alerte ou effectuer d'autres actions
+          setAlertVisible(true);
           if (response.data.status === true) {
-            setAlertVisible(true);
-            Alert.alert('Succès', 'Participation enregistrée.', [
-              {text: 'OK', onPress: handleAlertClose},
-            ]);
-            console.log(data);
+            setAttendeeId(response.data.attendee_details.attendee_id);
+            setModalMessage('Participation enregistrée.');
+            setModalVisible(true);
           } else {
-            // Error scenario
-            console.error(
-              "Erreur lors de l'enregistrement:",
-              response.data.message,
-            ); // Assuming 'message' contains the error message
-            setAlertVisible(true);
-            Alert.alert(
-              'Erreur',
-              "Impossible d'enregistrer la participation.",
-              [{text: 'OK', onPress: handleAlertClose}],
-            );
-            console.log(data);
+            setModalMessage("Impossible d'enregistrer la participation.");
+            setModalVisible(true);
           }
         })
         .catch(error => {
-          // Échec de l'enregistrement, afficher une alerte d'erreur
-          console.error("Erreur lors de l'enregistrement:", error);
-          setAlertVisible(true);
-          Alert.alert('Erreur', "Impossible d'enregistrer la participation.", [
-            {text: 'OK', onPress: handleAlertClose},
-          ]);
+          setModalMessage('Erreur de réseau, veuillez réessayer.');
+          setModalVisible(true);
         });
     }
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Réinitialiser l'état lorsque le composant est monté ou revenu à la vue
       setAlertVisible(false);
     });
-
     return unsubscribe;
   }, [navigation]);
 
+  const handleAddComment = async () => {
+    const apiUrl = `${BASE_URL}/ajax_update_attendee/?current_user_login_details_id=${userId}&attendee_id=${attendeeId}&comment=${encodeURIComponent(
+      comment,
+    )}`;
+    try {
+      const response = await axios.post(apiUrl);
+      if (response.data.status) {
+        console.log('Enregistrement réussi:', response.data);
+      } else {
+        console.error('Enregistrement échoué:', response.data.message);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement:", error);
+    }
+    Keyboard.dismiss();
+    setModalVisible(false);
+    setAlertVisible(false);
+    triggerListRefresh();
+    setComment('');
+  };
+
   return (
     <EventProvider>
-      <View style={styles.container}>
-        <View style={styles.overlay}>
+      <TouchableWithoutFeedback onPress={undefined} accessible={false}>
+        <View style={styles.container}>
           <HeaderComponent
             title={'Scan QR Code'}
             color={colors.greyCream}
             handlePress={handleBackPress}
           />
-        </View>
-        {!alertVisible && (
-          <QRCodeScanner
-            onRead={onSuccess}
-            bottomContent={<View />}
-            showMarker={true}
-            checkAndroid6Permissions={true}
-            cameraStyle={{height: '98%', top: 30}}
-            customMarker={<CustomMarker />}
+          {!alertVisible && (
+            <QRCodeScanner
+              onRead={onSuccess}
+              bottomContent={<View />}
+              showMarker={true}
+              checkAndroid6Permissions={true}
+              cameraStyle={{height: '98%', top: 30}}
+              customMarker={<CustomMarker />}
+            />
+          )}
+          <ModalComponent
+            visible={modalVisible}
+            message={modalMessage}
+            onClose={handleAlertClose}
+            onPress={handleAddComment}
+            value={comment}
+            onChangeText={setComment}
           />
-        )}
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     </EventProvider>
   );
 };
@@ -112,9 +134,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'black',
-  },
-  overlay: {
-    zIndex: 1,
   },
 });
 

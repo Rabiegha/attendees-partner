@@ -9,7 +9,6 @@ import {
   StatusBar,
 } from 'react-native';
 import List from '../components/screens/attendees/List';
-import ProgressBar from '../components/elements/progress/ProgressBar';
 import ProgressText from '../components/elements/progress/ProgressionText';
 import globalStyle from '../assets/styles/globalStyle';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
@@ -40,6 +39,7 @@ const AttendeesScreen = () => {
     status: 'all', // Possible values: 'all', 'checked-in', 'not-checked-in'
     // You can add more filter criteria here as needed
   });
+  const [numberText, setNumberText] = useState('Participants');
 
   const openModal = () => {
     setModalVisible(true);
@@ -49,13 +49,6 @@ const AttendeesScreen = () => {
       duration: 300, // Animation duration
       useNativeDriver: true, // Use native driver for better performance
     }).start();
-  };
-
-  const showNotification = () => {
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-    }, 2000);
   };
 
   const closeModal = () => {
@@ -68,13 +61,6 @@ const AttendeesScreen = () => {
   };
 
   const navigation = useNavigation();
-
-  const handleGoBack = () => {
-    /* navigation.reset({
-      index: 0,
-      routes: [{name: 'Events'}],
-    }); */
-  };
 
   useEffect(() => {
     // Calculate progress when totalAttendees or checkedInAttendees change
@@ -89,9 +75,9 @@ const AttendeesScreen = () => {
     setFilter(newFilter);
     closeModal(); // Assuming you want to close the modal on filter apply
   };
-  const updateProgress = (total, checkedIn) => {
+  const updateProgress = total => {
     setTotalListAttendees(total);
-    setCheckedInAttendees(checkedIn);
+    setNumberText(total === 1 ? 'Participant' : 'Participants');
   };
   const clearSearch = () => {
     if (searchQuery !== '') {
@@ -120,27 +106,18 @@ const AttendeesScreen = () => {
         </View>
       )}
       <View style={[globalStyle.container, styles.container]}>
-        <Search
-          style={styles.search}
-          onChange={text => setSearchQuery(text)}
-          value={searchQuery}
-        />
+        <Search onChange={text => setSearchQuery(text)} value={searchQuery} />
 
-        <ProgressText
-          totalCheckedAttendees={checkedInAttendees}
-          totalAttendees={totalListAttendees}
-        />
-        <ProgressBar
+        <ProgressText totalAttendees={totalListAttendees} text={numberText} />
+        {/*         <ProgressBar
           progress={(checkedInAttendees / totalListAttendees) * 100}
-        />
+        /> */}
         {/*         <TouchableOpacity onPress={showNotification} style={styles.button}>
           <Text style={styles.buttonText}>Afficher la notification</Text>
         </TouchableOpacity> */}
-
         <List
           searchQuery={searchQuery}
           onUpdateProgress={updateProgress}
-          onShowNotification={showNotification}
           filterCriteria={filterCriteria}
         />
 

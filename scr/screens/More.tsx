@@ -7,7 +7,7 @@ import Share from 'react-native-share';
 import HeaderComponent from '../components/elements/header/HeaderComponent';
 import MoreComponent from '../components/screens/MoreComponent';
 import globalStyle from '../assets/styles/globalStyle';
-import { BASE_URL } from '../config';
+import {BASE_URL} from '../config';
 
 const MoreScreen = ({route, navigation}) => {
   const {triggerListRefresh} = useEvent();
@@ -21,8 +21,16 @@ const MoreScreen = ({route, navigation}) => {
     phone,
     organization,
     attendeeStatus,
+    comment,
   } = route.params;
-  console.log(firstName, lastName, email, attendeeStatus, organization);
+  console.log(
+    firstName,
+    lastName,
+    email,
+    attendeeStatus,
+    organization,
+    comment,
+  );
   const [localAttendeeStatus, setLocalAttendeeStatus] =
     useState(attendeeStatus);
 
@@ -97,6 +105,7 @@ const MoreScreen = ({route, navigation}) => {
           attendeeStatus={localAttendeeStatus}
           handleButton={handleButton}
           Share={sendPdf}
+          comment={comment}
         />
       </View>
     </View>

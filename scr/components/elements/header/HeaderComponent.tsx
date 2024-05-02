@@ -26,7 +26,7 @@ const HeaderComponent = ({title, handlePress, color}) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    top: 20,
+    top: 30,
     flexDirection: 'row',
     justifyContent: 'space-between', // Align items to start
     alignItems: 'center',

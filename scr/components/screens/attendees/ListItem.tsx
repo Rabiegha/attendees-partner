@@ -88,6 +88,7 @@ const ListItem = React.memo(({item, searchQuery}) => {
       phone: item.phone,
       attendeeStatus: item.attendee_status,
       organization: item.organization,
+      comment: item.comment,
     });
   };
 
@@ -97,7 +98,6 @@ const ListItem = React.memo(({item, searchQuery}) => {
         <Text style={styles.itemName}>
           {highlightSearch(`${item.first_name} ${item.last_name}`, searchQuery)}
         </Text>
-        <CustomSwitch value={isSwitchOn} onValueChange={handleSwitchToggle} />
       </View>
     </TouchableOpacity>
   );
@@ -105,19 +105,20 @@ const ListItem = React.memo(({item, searchQuery}) => {
 
 const styles = StyleSheet.create({
   listItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     backgroundColor: colors.greyCream,
     borderRadius: 10,
     padding: 10,
-    width: '100%',
+    paddingVertical: 15,
     marginBottom: 10,
+    width: 350,
   },
   itemName: {
     fontSize: 16,
     color: 'black',
   },
+  switch: {
+    display: 'none',
+  }
 });
 
 export default ListItem;

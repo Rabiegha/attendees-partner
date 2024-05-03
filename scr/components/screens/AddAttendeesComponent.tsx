@@ -121,6 +121,7 @@ const AddAttendeesComponent = ({onPress}) => {
 
       <ScrollView
         contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         {/*       <SuccessComponent onClose={undefined} text={'Invité enregisté!'} />
       <FailComponent onClose={undefined} text={'une erreur est produite!'} /> */}

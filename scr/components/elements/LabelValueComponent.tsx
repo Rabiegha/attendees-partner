@@ -18,7 +18,7 @@ const LabelValueComponent = ({label, value, value2}) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 25,
+    marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

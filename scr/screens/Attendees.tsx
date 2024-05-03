@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Text,
   View,
   Modal,
   StyleSheet,
@@ -17,6 +18,7 @@ import SuccessComponent from '../components/elements/notifications/SuccessCompon
 import {useEvent} from '../components/context/EventContext';
 import Search from '../components/elements/Search';
 import FiltreComponent from '../components/filtre/FiltreComponent';
+import Sound from 'react-native-sound';
 
 const AttendeesScreen = () => {
   const {eventName} = useEvent();
@@ -90,6 +92,18 @@ const AttendeesScreen = () => {
     } // Reset the search query
   };
 
+  // Enable playback in silence mode
+  Sound.setCategory('Playback');
+  const playSound = () => {
+    const sound = new Sound('Success.mp3', Sound.MAIN_BUNDLE, error => {
+      if (error) {
+        console.log('Failed to load the sound', error);
+        return;
+      }
+      sound.play(() => sound.release()); // Play the sound and release it after playing
+    });
+  };
+
   return (
     <View style={globalStyle.backgroundWhite}>
       <HeaderParticipants
@@ -115,6 +129,9 @@ const AttendeesScreen = () => {
         {/*         <TouchableOpacity onPress={showNotification} style={styles.button}>
           <Text style={styles.buttonText}>Afficher la notification</Text>
         </TouchableOpacity> */}
+        <TouchableOpacity style={styles.play} onPress={playSound}>
+          <Text>Play Sound</Text>
+        </TouchableOpacity>
         <List
           searchQuery={searchQuery}
           onUpdateProgress={updateProgress}

@@ -33,9 +33,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 12,
     position: 'relative',
-    maxHeight: 60,
-    height: 60,
     zIndex: 10,
+    backgroundColor: 'transparent',
   },
   title: {
     top: 25,

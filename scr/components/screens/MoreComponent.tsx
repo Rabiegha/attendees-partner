@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Image } from 'react-native';
+import {ScrollView, StyleSheet, View, Image} from 'react-native';
 import LabelValueComponent from '../elements/LabelValueComponent';
 import LargeButton from '../elements/buttons/LargeButton';
 import colors from '../../../colors/colors';
@@ -45,14 +45,16 @@ const MoreComponent = ({
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.imageContainer}>
         <Image
           source={require('../../assets/images/user.png')}
           style={styles.image}
         />
       </View>
-      <View style={styles.topButtonsContainer}>
+{/*       <View style={styles.topButtonsContainer}>
         <SmallButton
           imageSource={require('../../assets/images/icons/Scan.png')}
           pressHandler={See}
@@ -65,26 +67,32 @@ const MoreComponent = ({
           backgroundColor={colors.red}
           tintColor="white"
         />
-      </View>
-      <LabelValueComponent label="Nom:" value={firstName} value2={lastName} />
+      </View> */}
+      <LabelValueComponent
+        label="Nom:"
+        value={firstName && lastName ? `${firstName} ${lastName}` : '- '}
+        value2={undefined}
+      />
+
       <LabelValueComponent
         label="Adresse mail:"
-        value={email}
+        value={email ? email : '-'}
         value2={undefined}
       />
       <LabelValueComponent
         label="Téléphone:"
-        value={insertSpaceBetweenPairs(phone)}
+        value={phone ? insertSpaceBetweenPairs(phone) : '-'}
         value2={undefined}
       />
+
       <LabelValueComponent
         label="Entreprise:"
-        value={organization}
+        value={organization ? organization : '-'}
         value2={undefined}
       />
       <LabelValueComponent
         label="Commmentaire:"
-        value={comment}
+        value={comment ? comment : '-'}
         value2={undefined}
       />
       {attendeeStatus == 0 ? (
@@ -117,6 +125,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 40,
+    marginBottom: 40,
   },
   name: {
     fontSize: 24,

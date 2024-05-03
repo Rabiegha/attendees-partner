@@ -12,7 +12,7 @@ import colors from '../../../colors/colors';
 import {BASE_URL} from '../../config';
 import {onPress} from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
 
-const ModalComponent = ({
+const CommentModal = ({
   visible,
   message,
   onClose,
@@ -54,7 +54,7 @@ const ModalComponent = ({
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
+    top: 200,
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalComponent;
+export default CommentModal;

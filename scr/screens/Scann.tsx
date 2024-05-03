@@ -1,6 +1,12 @@
-import {View, Text, StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import ScannerComponent from '../components/screens/ScannComponent.tsx';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import React from 'react';
 
 const QRCodeScannerScreen = () => {
@@ -12,6 +18,9 @@ const QRCodeScannerScreen = () => {
       };
     }, []),
   );
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
   return (
     <View style={{flex: 1}}>
       <ScannerComponent />

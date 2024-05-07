@@ -92,15 +92,35 @@ const AttendeesScreen = () => {
     } // Reset the search query
   };
 
-  // Enable playback in silence mode
+  // Set the sound to play even if the device is on silent mode
   Sound.setCategory('Playback');
+
   const playSound = () => {
-    const sound = new Sound('Success.mp3', Sound.MAIN_BUNDLE, error => {
+    // Initialize the sound object
+    const whoosh = new Sound('success.mp3', Sound.MAIN_BUNDLE, error => {
       if (error) {
         console.log('Failed to load the sound', error);
         return;
       }
-      sound.play(() => sound.release()); // Play the sound and release it after playing
+
+      // Sound is loaded successfully
+      console.log(
+        'Duration in seconds: ' +
+          whoosh.getDuration() +
+          ', number of channels: ' +
+          whoosh.getNumberOfChannels(),
+      );
+
+      // Play the sound with an onEnd callback
+      whoosh.play(success => {
+        if (success) {
+          console.log('Successfully finished playing');
+        } else {
+          console.log('Playback failed due to audio decoding errors');
+        }
+        // Release the audio resource once the sound has played
+        whoosh.release();
+      });
     });
   };
 

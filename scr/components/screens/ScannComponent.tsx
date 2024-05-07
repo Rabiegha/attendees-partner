@@ -21,6 +21,7 @@ import {BASE_URL} from '../../config';
 import CommentModal from '../modals/CommentModal';
 import {MMKV} from 'react-native-mmkv';
 import Sound from 'react-native-sound';
+import RejectedModal from '../modals/RejectedModal';
 
 const storage = new MMKV();
 
@@ -31,6 +32,7 @@ const ScannerComponent = () => {
   const navigation = useNavigation();
   const [alertVisible, setAlertVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalRejectedVisible, setModalRejectedVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [attendeeId, setAttendeeId] = useState(null);
   const [comment, setComment] = useState('');
@@ -62,16 +64,26 @@ const ScannerComponent = () => {
           setAlertVisible(true);
           if (response.data.status === true) {
             setAttendeeId(response.data.attendee_details.attendee_id);
-            setModalMessage('Participation enregistrée.');
+            setModalMessage('Participant enregistré.');
             setModalVisible(true);
           } else {
-            setModalMessage("Impossible d'enregistrer la participation.");
-            setModalVisible(true);
+            setModalRejectedVisible(true);
+            setModalMessage("Impossible d'enregistrer le participant.");
+            setTimeout(() => {
+              setModalRejectedVisible(false);
+              triggerListRefresh();
+              setAlertVisible(false);
+            }, 2000);
           }
         })
         .catch(error => {
+          setModalRejectedVisible(true);
           setModalMessage('Erreur de réseau, veuillez réessayer.');
-          setModalVisible(true);
+          setTimeout(() => {
+            triggerListRefresh();
+            setModalRejectedVisible(false);
+            setAlertVisible(false);
+          }, 2000);
         });
     }
   };
@@ -97,19 +109,31 @@ const ScannerComponent = () => {
           setModalVisible(false);
           setAlertVisible(false);
           triggerListRefresh();
-        }, 2000); // Hide the modal and message after 2 seconds
+          setComment('');
+        }, 2000);
         console.log('Enregistrement réussi:', response.data);
       } else {
         console.error('Enregistrement échoué:', response.data.message);
+        setModalVisible(false);
+        setModalRejectedVisible(true);
+        setTimeout(() => {
+          setModalRejectedVisible(false);
+          setAlertVisible(false);
+          triggerListRefresh();
+          setComment('');
+        }, 2000);
       }
     } catch (error) {
       console.error("Erreur lors de l'enregistrement:", error);
+      setModalVisible(false);
+      setModalRejectedVisible(true);
+      setTimeout(() => {
+        setModalRejectedVisible(false);
+        setAlertVisible(false);
+        triggerListRefresh();
+        setComment('');
+      }, 2000);
     }
-    Keyboard.dismiss();
-    setModalVisible(false);
-    setAlertVisible(false);
-    triggerListRefresh();
-    setComment('');
   };
   const handleDismissKeyboard = () => {
     Keyboard.dismiss();
@@ -123,16 +147,13 @@ const ScannerComponent = () => {
           console.log('Failed to load the sound', error);
           return;
         }
-        sound.play(() => sound.release()); // Play the sound and release it after playing
+        sound.play(() => sound.release());
       },
     );
   };
 
   return (
     <EventProvider>
-      <TouchableOpacity style={styles.play} onPress={playSound}>
-        <Text>Play Sound</Text>
-      </TouchableOpacity>
       <TouchableWithoutFeedback
         onPress={handleDismissKeyboard}
         accessible={false}>
@@ -160,7 +181,17 @@ const ScannerComponent = () => {
               onPress={handleAddComment}
               value={comment}
               onChangeText={setComment}
-              isValidationMessageVisible={undefined}
+              isValidationMessageVisible={isValidationMessageVisible}
+              validationMessage={undefined}
+            />
+            <RejectedModal
+              visible={modalRejectedVisible}
+              message={modalMessage}
+              onClose={handleAlertClose}
+              onPress={handleAddComment}
+              value={comment}
+              onChangeText={setComment}
+              isValidationMessageVisible={isValidationMessageVisible}
               validationMessage={undefined}
             />
           </ScrollView>

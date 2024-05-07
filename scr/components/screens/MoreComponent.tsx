@@ -54,7 +54,7 @@ const MoreComponent = ({
           style={styles.image}
         />
       </View>
-{/*       <View style={styles.topButtonsContainer}>
+      {/*       <View style={styles.topButtonsContainer}>
         <SmallButton
           imageSource={require('../../assets/images/icons/Scan.png')}
           pressHandler={See}

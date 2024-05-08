@@ -89,7 +89,9 @@ const ProfileComponent = () => {
   const {fulltName, email} = useUserDetails();
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    <ScrollView
+      contentContainerStyle={styles.scrollViewContent}
+      showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <Image

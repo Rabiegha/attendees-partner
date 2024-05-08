@@ -6,19 +6,21 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Image,
 } from 'react-native';
 import axios from 'axios';
 import colors from '../../../colors/colors';
 import {BASE_URL} from '../../config';
 import {onPress} from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
 
-const ModalComponent = ({
+const CommentModal = ({
   visible,
   message,
   onClose,
-  onPress,
+  onPress, // Make sure this prop is passed correctly and used for a meaningful action
   value,
   onChangeText,
+  isValidationMessageVisible,
 }) => {
   return (
     <Modal
@@ -29,22 +31,33 @@ const ModalComponent = ({
       <View style={styles.modalBackground}>
         <View style={styles.modalContent}>
           <Text style={styles.title}>Commentaire</Text>
-          <Text style={styles.text}>{message}</Text>
-          <TextInput
-            style={styles.textArea}
-            multiline={true}
-            numberOfLines={4}
-            placeholder="Entrez votre commentaire ici..."
-            value={value} // Bind TextInput to the state variable
-            onChangeText={onChangeText}
-            placeholderTextColor={colors.grey}
-          />
-          <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={styles.buttonText}>Ajouter</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.buttonText2}>Fermer</Text>
-          </TouchableOpacity>
+          {isValidationMessageVisible ? (
+            <View style={styles.accepted}>
+              <Text style={styles.text}>{message}</Text>
+              <Image
+                source={require('../../assets/images/Accepted.gif')}
+                style={styles.gifStyle}
+              />
+            </View>
+          ) : (
+            <>
+              <TextInput
+                style={styles.textArea}
+                multiline={true}
+                numberOfLines={4}
+                placeholder="Entrez votre commentaire ici..."
+                value={value}
+                onChangeText={onChangeText}
+                placeholderTextColor={colors.grey}
+              />
+              <TouchableOpacity style={styles.button} onPress={onPress}>
+                <Text style={styles.buttonText}>Ajouter</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.buttonText2}>Fermer</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </Modal>
@@ -54,7 +67,7 @@ const ModalComponent = ({
 const styles = StyleSheet.create({
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
+    top: 200,
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
@@ -102,6 +115,14 @@ const styles = StyleSheet.create({
   buttonText2: {
     color: colors.green,
   },
+  gifStyle: {
+    height: 100,
+    width: 100,
+  },
+  accepted: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
-export default ModalComponent;
+export default CommentModal;

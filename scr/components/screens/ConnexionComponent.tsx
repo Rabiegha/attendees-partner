@@ -22,6 +22,7 @@ const ConnexionComponent = ({
   return (
     <ScrollView
       contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled">
       {success === false && (
         <FailComponent

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  Text,
   View,
   Modal,
   StyleSheet,
@@ -17,6 +18,7 @@ import SuccessComponent from '../components/elements/notifications/SuccessCompon
 import {useEvent} from '../components/context/EventContext';
 import Search from '../components/elements/Search';
 import FiltreComponent from '../components/filtre/FiltreComponent';
+import Sound from 'react-native-sound';
 
 const AttendeesScreen = () => {
   const {eventName} = useEvent();
@@ -90,6 +92,38 @@ const AttendeesScreen = () => {
     } // Reset the search query
   };
 
+  // Set the sound to play even if the device is on silent mode
+  Sound.setCategory('Playback');
+
+  const playSound = () => {
+    // Initialize the sound object
+    const whoosh = new Sound('success.mp3', Sound.MAIN_BUNDLE, error => {
+      if (error) {
+        console.log('Failed to load the sound', error);
+        return;
+      }
+
+      // Sound is loaded successfully
+      console.log(
+        'Duration in seconds: ' +
+          whoosh.getDuration() +
+          ', number of channels: ' +
+          whoosh.getNumberOfChannels(),
+      );
+
+      // Play the sound with an onEnd callback
+      whoosh.play(success => {
+        if (success) {
+          console.log('Successfully finished playing');
+        } else {
+          console.log('Playback failed due to audio decoding errors');
+        }
+        // Release the audio resource once the sound has played
+        whoosh.release();
+      });
+    });
+  };
+
   return (
     <View style={globalStyle.backgroundWhite}>
       <HeaderParticipants
@@ -115,6 +149,9 @@ const AttendeesScreen = () => {
         {/*         <TouchableOpacity onPress={showNotification} style={styles.button}>
           <Text style={styles.buttonText}>Afficher la notification</Text>
         </TouchableOpacity> */}
+        <TouchableOpacity style={styles.play} onPress={playSound}>
+          <Text>Play Sound</Text>
+        </TouchableOpacity>
         <List
           searchQuery={searchQuery}
           onUpdateProgress={updateProgress}

@@ -1141,7 +1141,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - RNPermissions (4.1.4):
+  - RNPermissions (4.1.5):
     - React-Core
   - RNReanimated (3.7.1):
     - glog
@@ -1455,13 +1455,13 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNGestureHandler: 67fb54b3e6ca338a8044e85cd6f340265aa41091
-  RNPermissions: 89d313f4d48612fc35842f3a21107e163f39a742
+  RNPermissions: 804379cdb8fa76ad0ab6617240057fb66b0eb0dd
   RNReanimated: 15a855719335a6b655a214531e86d806edfd49da
   RNScreens: 17e2f657f1b09a71ec3c821368a04acbb7ebcb46
   RNShare: b674d9f1cb0dc11116983bebd8712908a226a3ee
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
 
-PODFILE CHECKSUM: b9b3742942db83eae771d72b0b1e75d41a569de5
+PODFILE CHECKSUM: c2830debd46ebaa6486e492e51c2f7c3b961b754
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.14.3
